@@ -21,9 +21,7 @@ pub const Game = struct {
         defer rl.closeWindow();
 
         const window_center_x = config.window_width / 2;
-        const window_center_y = config.window_height / 2;
-
-        try self.addBall(.{ .x = window_center_x, .y = window_center_y });
+        try self.addBall(.{ .x = window_center_x, .y = 0 });
 
         while (!rl.windowShouldClose()) {
             self.loop();
