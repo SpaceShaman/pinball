@@ -14,7 +14,7 @@ const Ball = struct {
     y: i32,
     radius: f32 = 30,
 
-    pub fn draw(self: *Ball) void {
+    pub fn draw(self: *const Ball) void {
         rl.drawCircle(self.x, self.y, self.radius, .white);
     }
 
@@ -23,27 +23,64 @@ const Ball = struct {
     }
 };
 
-pub fn main() !void {
-    rl.initWindow(window_width, window_height, "Flipper");
-    defer rl.closeWindow();
+const Game = struct {
+    allocator: std.mem.Allocator,
+    accumulator: f32 = 0,
+    balls: std.ArrayList(Ball),
 
-    var ball = Ball{ .x = window_center_x, .y = window_center_y };
+    pub fn init(allocator: std.mem.Allocator) Game {
+        return Game{ .allocator = allocator, .balls = .empty };
+    }
 
-    var accumulator: f32 = 0;
+    pub fn deinit(self: *Game) void {
+        self.balls.deinit(self.allocator);
+    }
 
-    while (!rl.windowShouldClose()) {
+    pub fn start(self: *Game) !void {
+        rl.initWindow(window_width, window_height, "Flipper");
+        defer rl.closeWindow();
+
+        try self.addBall(.{ .x = window_center_x, .y = window_center_y });
+
+        while (!rl.windowShouldClose()) {
+            self.loop();
+        }
+    }
+
+    fn loop(self: *Game) void {
         const frame_time = rl.getFrameTime();
-        accumulator += frame_time;
+        self.accumulator += frame_time;
 
-        while (accumulator >= physics_step) {
-            ball.physics();
-            accumulator -= physics_step;
+        while (self.accumulator >= physics_step) {
+            self.physics();
+            self.accumulator -= physics_step;
         }
 
         rl.beginDrawing();
         defer rl.endDrawing();
 
         rl.clearBackground(.black);
-        ball.draw();
+        self.draw();
     }
+
+    fn addBall(self: *Game, ball: Ball) !void {
+        try self.balls.append(self.allocator, ball);
+    }
+
+    fn draw(self: *const Game) void {
+        for (self.balls.items) |*ball| ball.draw();
+    }
+
+    fn physics(self: *Game) void {
+        for (self.balls.items) |*ball| ball.physics();
+    }
+};
+
+pub fn main(init: std.process.Init) !void {
+    const allocator = init.gpa;
+
+    var game = Game.init(allocator);
+    defer game.deinit();
+
+    try game.start();
 }
