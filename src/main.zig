@@ -1,6 +1,6 @@
 const rl = @import("raylib");
 
-pub fn main() !void {
+pub fn main() anyerror!void {
     rl.initWindow(1280, 720, "Flipper");
     defer rl.closeWindow();
 
