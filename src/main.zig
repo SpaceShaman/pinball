@@ -5,9 +5,28 @@ const windowHeight = 720;
 const windowCenterX = windowWidth / 2;
 const windowCenterY = windowHeight / 2;
 
-pub fn main() anyerror!void {
+const Ball = struct {
+    x: i32,
+    y: i32,
+    radius: f32 = 30,
+
+    pub fn init(x: i32, y: i32) Ball {
+        return Ball{
+            .x = x,
+            .y = y,
+        };
+    }
+
+    pub fn draw(self: Ball) void {
+        rl.drawCircle(self.x, self.y, self.radius, .white);
+    }
+};
+
+pub fn main() !void {
     rl.initWindow(windowWidth, windowHeight, "Flipper");
     defer rl.closeWindow();
+
+    rl.setTargetFPS(60);
 
     while (!rl.windowShouldClose()) {
         rl.beginDrawing();
@@ -15,6 +34,7 @@ pub fn main() anyerror!void {
 
         rl.clearBackground(.black);
 
-        rl.drawCircle(windowCenterX, windowCenterY, 50, .white);
+        const ball = Ball.init(windowCenterX, windowCenterY);
+        ball.draw();
     }
 }
