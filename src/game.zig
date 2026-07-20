@@ -5,7 +5,6 @@ const Ball = @import("ball.zig").Ball;
 
 pub const Game = struct {
     allocator: std.mem.Allocator,
-    accumulator: f32 = 0,
     balls: std.ArrayList(Ball),
 
     pub fn init(allocator: std.mem.Allocator) Game {
@@ -21,7 +20,8 @@ pub const Game = struct {
         defer rl.closeWindow();
 
         const window_center_x = config.window_width / 2;
-        try self.addBall(.{ .x = window_center_x, .y = 0 });
+        const ball = Ball.init(window_center_x, 0);
+        try self.addBall(ball);
 
         while (!rl.windowShouldClose()) {
             self.loop();
@@ -29,14 +29,7 @@ pub const Game = struct {
     }
 
     fn loop(self: *Game) void {
-        const frame_time = rl.getFrameTime();
-        self.accumulator += frame_time;
-
-        while (self.accumulator >= config.physics_step) {
-            self.physics();
-            self.accumulator -= config.physics_step;
-        }
-
+        self.physics();
         rl.beginDrawing();
         defer rl.endDrawing();
 
