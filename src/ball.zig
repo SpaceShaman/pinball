@@ -3,8 +3,8 @@ const config = @import("config.zig");
 
 pub const Ball = struct {
     position: rl.Vector2,
-    velocity: rl.Vector2 = rl.Vector2.init(50, 0),
-    gravity: f32 = 100,
+    velocity: rl.Vector2 = rl.Vector2.init(100, 0),
+    gravity: f32 = 200,
     bounciness: f32 = 0.8,
     radius: f32 = 10,
 
