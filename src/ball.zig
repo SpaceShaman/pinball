@@ -1,17 +1,14 @@
 const rl = @import("raylib");
 const config = @import("config.zig");
-const print = @import("std").debug.print;
 
 pub const Ball = struct {
     position: rl.Vector2,
     velocity: rl.Vector2 = rl.Vector2.init(50, 0),
     gravity: f32 = 100,
+    bounciness: f32 = 0.8,
     radius: f32 = 10,
 
     pub fn init(x: f32, y: f32) Ball {
-        const vel = rl.Vector2.init(100, 5);
-        const comp = vel.reflect(rl.Vector2.init(0, 1));
-        print("Velocity: {}", .{comp});
         return Ball{ .position = rl.Vector2.init(x, y) };
     }
 
@@ -22,10 +19,13 @@ pub const Ball = struct {
     }
 
     pub fn physics(self: *Ball) void {
-        const bottom: f32 = @floatFromInt(config.window_height);
+        const bottom: f32 = config.window_height - self.radius;
+
         if (self.position.y > bottom) {
+            if (self.velocity.x < 1 and self.velocity.y < 1) return;
+            self.position.y = bottom;
             self.velocity = self.velocity.reflect(rl.Vector2.init(0, 1));
-            print("Velocity: {}", .{self.velocity});
+            self.velocity = self.velocity.scale(self.bounciness);
         }
         const dt = rl.getFrameTime();
         self.velocity.y += dt * self.gravity;
