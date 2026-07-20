@@ -19,8 +19,7 @@ pub const Game = struct {
         rl.initWindow(config.window_width, config.window_height, "Flipper");
         defer rl.closeWindow();
 
-        const window_center_x = config.window_width / 2;
-        const ball = Ball.init(window_center_x, 0);
+        const ball = Ball.init(0, 0);
         try self.addBall(ball);
 
         while (!rl.windowShouldClose()) {
