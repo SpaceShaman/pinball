@@ -2,17 +2,20 @@ const std = @import("std");
 const rl = @import("raylib");
 const config = @import("config.zig");
 const Ball = @import("ball.zig").Ball;
+const Wall = @import("wall.zig").Wall;
 
 pub const Game = struct {
     allocator: std.mem.Allocator,
     balls: std.ArrayList(Ball),
+    walls: std.ArrayList(Wall),
 
     pub fn init(allocator: std.mem.Allocator) Game {
-        return Game{ .allocator = allocator, .balls = .empty };
+        return Game{ .allocator = allocator, .balls = .empty, .walls = .empty };
     }
 
     pub fn deinit(self: *Game) void {
         self.balls.deinit(self.allocator);
+        self.walls.deinit(self.allocator);
     }
 
     pub fn start(self: *Game) !void {
@@ -20,6 +23,9 @@ pub const Game = struct {
         defer rl.closeWindow();
 
         rl.setWindowMonitor(2);
+
+        const wall = Wall.init(0, 400, 400, 720);
+        try self.addWall(wall);
 
         const ball = Ball.init(0, 0);
         try self.addBall(ball);
@@ -42,7 +48,12 @@ pub const Game = struct {
         try self.balls.append(self.allocator, ball);
     }
 
+    fn addWall(self: *Game, wall: Wall) !void {
+        try self.walls.append(self.allocator, wall);
+    }
+
     fn draw(self: *const Game) void {
+        for (self.walls.items) |*wall| wall.draw();
         for (self.balls.items) |*ball| ball.draw();
     }
 
