@@ -21,7 +21,10 @@ pub const Ball = struct {
     }
 
     pub fn physics(self: *Ball) void {
-        const bottom: f32 = config.window_height - self.radius;
+        const dt = rl.getFrameTime();
+        const dt_velocity = self.velocity.scale(dt);
+        self.position = self.position.add(dt_velocity);
+        self.velocity.y += dt * self.gravity;
 
         for (self.walls.items) |*wall| {
             if (rl.checkCollisionCircleLine(
@@ -29,36 +32,20 @@ pub const Ball = struct {
                 self.radius,
                 wall.start_pos,
                 wall.end_pos,
-            )) {
-                print("start_pos: {}\n", .{wall.start_pos});
-                print("end_pos: {}\n", .{wall.end_pos});
-                print("velocity: {}\n", .{self.velocity});
-                const wall_vec = wall.end_pos.subtract(wall.start_pos).normalize();
-                print("wall_vec: {}\n", .{wall_vec});
-                const wall_refl = self.velocity.reflect(wall_vec).normalize().multiply(rl.Vector2.init(3, 3));
-                print("wall_refl: {}\n", .{wall_refl});
-                self.position = self.position.add(wall_refl.negate());
-                self.velocity = self.velocity.reflect(wall_vec).negate();
-                print("velocity: {}\n", .{self.velocity});
-                self.velocity = self.velocity.scale(self.bounciness);
-            }
+            )) self.resolveWallCollision(wall);
         }
+    }
 
-        if (self.position.y > bottom) {
-            self.position.y = bottom;
-            if (self.velocity.x < 1 and self.velocity.y < 1) {
-                self.position.y = 0.0;
-                self.position.x = 0.0;
-                self.velocity.x = 150;
-                self.velocity.y = 0.0;
-            }
-            self.velocity = self.velocity.reflect(rl.Vector2.init(0, 1));
-            self.velocity = self.velocity.scale(self.bounciness);
-        }
-
-        const dt = rl.getFrameTime();
-        self.velocity.y += dt * self.gravity;
-        const dt_velocity = self.velocity.scale(dt);
-        self.position = self.position.add(dt_velocity);
+    fn resolveWallCollision(self: *Ball, wall: *Wall) void {
+        const closest_point = closestPointOnLine(self.position, wall.start_pos, wall.end_pos);
+        const reflection = self.position.subtract(closest_point).normalize();
+        self.velocity = self.velocity.reflect(reflection);
     }
 };
+
+fn closestPointOnLine(point: rl.Vector2, start: rl.Vector2, end: rl.Vector2) rl.Vector2 {
+    const start_end = end.subtract(start);
+    const start_point = point.subtract(start);
+    const t = start_end.dotProduct(start_point) / start_end.dotProduct(start_end);
+    return start.add(start_end.multiply(rl.Vector2.init(t, t)));
+}

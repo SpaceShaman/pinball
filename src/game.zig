@@ -22,9 +22,10 @@ pub const Game = struct {
         rl.initWindow(config.window_width, config.window_height, "Flipper");
         defer rl.closeWindow();
 
-        rl.setWindowMonitor(3);
+        rl.setWindowMonitor(2);
 
         try self.addWall(Wall.init(0, 400, 400, 720));
+        try self.addWall(Wall.init(0, 720, 1280, 720));
         try self.addWall(Wall.init(1280, 0, 1280, 720));
 
         const ball = Ball.init(0, 0, &self.walls);
