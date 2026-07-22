@@ -24,11 +24,13 @@ pub const Game = struct {
 
         rl.setWindowMonitor(2);
 
+        try self.addWall(Wall.init(0, 0, 0, 720)); // left
+        try self.addWall(Wall.init(1281, 0, 1281, 720)); // right
+        try self.addWall(Wall.init(0, 721, 1280, 721)); // bottom
+        try self.addWall(Wall.init(0, 0, 1280, 0)); // top
         try self.addWall(Wall.init(0, 400, 400, 720));
-        try self.addWall(Wall.init(0, 720, 1280, 720));
-        try self.addWall(Wall.init(1280, 0, 1280, 720));
 
-        const ball = Ball.init(0, 0, &self.walls);
+        const ball = Ball.init(50, 50, &self.walls);
         try self.addBall(ball);
 
         while (!rl.windowShouldClose()) {

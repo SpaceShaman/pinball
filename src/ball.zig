@@ -6,9 +6,9 @@ const print = @import("std").debug.print;
 
 pub const Ball = struct {
     position: rl.Vector2,
-    velocity: rl.Vector2 = rl.Vector2.init(150, 0),
+    velocity: rl.Vector2 = rl.Vector2.init(0, 0),
     gravity: f32 = 400,
-    bounciness: f32 = 0.9,
+    bounciness: f32 = 0.8,
     radius: f32 = 20,
     walls: *std.ArrayList(Wall),
 
@@ -41,11 +41,8 @@ pub const Ball = struct {
         const reflection = closest_point.subtract(self.position);
         const distance = reflection.length();
         const normal_ref = reflection.normalize();
-        print("distance: {}\n", .{distance});
-        print("normal_ref: {}\n", .{normal_ref});
         if (distance < self.radius) {
             const inside = self.radius - distance;
-            print("inside: {}\n", .{inside});
             self.position = self.position.add(normal_ref.negate().multiply(rl.Vector2.init(inside, inside)));
         }
         self.velocity = self.velocity.reflect(normal_ref);
