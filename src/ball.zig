@@ -8,7 +8,7 @@ pub const Ball = struct {
     position: rl.Vector2,
     velocity: rl.Vector2 = rl.Vector2.init(0, 0),
     gravity: f32 = 400,
-    bounciness: f32 = 0.8,
+    bounciness: f32 = 0.9,
     radius: f32 = 20,
     walls: *std.ArrayList(Wall),
 
