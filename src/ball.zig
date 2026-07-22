@@ -41,8 +41,8 @@ pub const Ball = struct {
         const distance = reflection.length();
         const normal_ref = reflection.normalize();
         if (distance < self.radius) {
-            const inside = self.radius - distance;
-            self.position = self.position.add(normal_ref.negate().multiply(rl.Vector2.init(inside, inside)));
+            const depth = self.radius - distance;
+            self.position = self.position.add(normal_ref.negate().scale(depth));
         }
         self.velocity = self.velocity.reflect(normal_ref);
         self.velocity = self.velocity.scale(self.bounciness);
