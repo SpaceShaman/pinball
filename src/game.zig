@@ -30,7 +30,7 @@ pub const Game = struct {
         try self.addWall(Wall.init(0, 0, 1280, 0)); // top
         try self.addWall(Wall.init(0, 400, 400, 720));
 
-        const ball = Ball.init(50, 50, &self.walls);
+        const ball = Ball.init(200, 50, &self.walls);
         try self.addBall(ball);
 
         while (!rl.windowShouldClose()) {

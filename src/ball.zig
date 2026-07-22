@@ -37,8 +37,7 @@ pub const Ball = struct {
     }
 
     fn resolveWallCollision(self: *Ball, wall: *Wall) void {
-        const closest_point = closestPointOnLine(self.position, wall.start_pos, wall.end_pos);
-        const reflection = closest_point.subtract(self.position);
+        const reflection = self.lineReflect(wall.start_pos, wall.end_pos);
         const distance = reflection.length();
         const normal_ref = reflection.normalize();
         if (distance < self.radius) {
@@ -46,12 +45,14 @@ pub const Ball = struct {
             self.position = self.position.add(normal_ref.negate().multiply(rl.Vector2.init(inside, inside)));
         }
         self.velocity = self.velocity.reflect(normal_ref);
+        self.velocity = self.velocity.scale(self.bounciness);
+    }
+
+    fn lineReflect(self: *Ball, start: rl.Vector2, end: rl.Vector2) rl.Vector2 {
+        const start_end = end.subtract(start);
+        const start_point = self.position.subtract(start);
+        const t = start_end.dotProduct(start_point) / start_end.dotProduct(start_end);
+        const closest_point = start.add(start_end.multiply(rl.Vector2.init(t, t)));
+        return closest_point.subtract(self.position);
     }
 };
-
-fn closestPointOnLine(point: rl.Vector2, start: rl.Vector2, end: rl.Vector2) rl.Vector2 {
-    const start_end = end.subtract(start);
-    const start_point = point.subtract(start);
-    const t = start_end.dotProduct(start_point) / start_end.dotProduct(start_end);
-    return start.add(start_end.multiply(rl.Vector2.init(t, t)));
-}
