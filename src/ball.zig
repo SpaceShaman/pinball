@@ -8,7 +8,7 @@ pub const Ball = struct {
     position: rl.Vector2,
     velocity: rl.Vector2 = rl.Vector2.init(150, 0),
     gravity: f32 = 400,
-    bounciness: f32 = 0.8,
+    bounciness: f32 = 0.9,
     radius: f32 = 20,
     walls: *std.ArrayList(Wall),
 
@@ -38,8 +38,17 @@ pub const Ball = struct {
 
     fn resolveWallCollision(self: *Ball, wall: *Wall) void {
         const closest_point = closestPointOnLine(self.position, wall.start_pos, wall.end_pos);
-        const reflection = self.position.subtract(closest_point).normalize();
-        self.velocity = self.velocity.reflect(reflection);
+        const reflection = closest_point.subtract(self.position);
+        const distance = reflection.length();
+        const normal_ref = reflection.normalize();
+        print("distance: {}\n", .{distance});
+        print("normal_ref: {}\n", .{normal_ref});
+        if (distance < self.radius) {
+            const inside = self.radius - distance;
+            print("inside: {}\n", .{inside});
+            self.position = self.position.add(normal_ref.negate().multiply(rl.Vector2.init(inside, inside)));
+        }
+        self.velocity = self.velocity.reflect(normal_ref);
     }
 };
 
