@@ -6,8 +6,8 @@ const print = @import("std").debug.print;
 pub const Ball = struct {
     position: rl.Vector2,
     velocity: rl.Vector2 = rl.Vector2.init(0, 0),
-    gravity: f32 = 400,
-    bounciness: f32 = 0.9,
+    gravity: f32 = 300,
+    bounciness: f32 = 0.6,
     radius: f32 = 20,
     walls: *std.ArrayList(Wall),
 
@@ -38,13 +38,16 @@ pub const Ball = struct {
     fn resolveWallCollision(self: *Ball, wall: *Wall) void {
         const reflection = self.lineReflect(wall.start_pos, wall.end_pos);
         const distance = reflection.length();
-        const normal_ref = reflection.normalize();
+        const reflection_n = reflection.normalize();
         if (distance < self.radius) {
             const depth = self.radius - distance;
-            self.position = self.position.add(normal_ref.negate().scale(depth));
+            self.position = self.position.add(reflection_n.negate().scale(depth));
         }
-        self.velocity = self.velocity.reflect(normal_ref);
-        self.velocity = self.velocity.scale(self.bounciness);
+
+        const velocity_n = reflection_n.scale(self.velocity.dotProduct(reflection_n));
+        const velocity_t = self.velocity.subtract(velocity_n);
+        const reduced_velocity_n = velocity_n.scale(self.bounciness);
+        self.velocity = velocity_t.add(reduced_velocity_n.negate());
     }
 
     fn lineReflect(self: *Ball, start: rl.Vector2, end: rl.Vector2) rl.Vector2 {

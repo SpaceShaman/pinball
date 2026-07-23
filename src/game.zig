@@ -30,8 +30,8 @@ pub const Game = struct {
         try self.addWall(Wall.init(720, 0, 720, 1280)); // right
         try self.addWall(Wall.init(0, 1280, 720, 1280)); // bottom
         try self.addWall(Wall.init(0, 1, 720, 1)); // top
-        try self.addWall(Wall.init(0, 900, 300, 1280));
-        try self.addWall(Wall.init(720, 900, 720 - 300, 1280));
+        try self.addWall(Wall.init(0, 980, 300, 1280));
+        try self.addWall(Wall.init(720, 980, 720 - 300, 1280));
 
         const ball = Ball.init(100, 50, &self.walls);
         try self.addBall(ball);
