@@ -1,8 +1,10 @@
 const std = @import("std");
 const rl = @import("raylib");
-const config = @import("config.zig");
 const Ball = @import("ball.zig").Ball;
 const Wall = @import("wall.zig").Wall;
+
+pub const window_width = 720;
+pub const window_height = 1280;
 
 pub const Game = struct {
     allocator: std.mem.Allocator,
@@ -19,16 +21,17 @@ pub const Game = struct {
     }
 
     pub fn start(self: *Game) !void {
-        rl.initWindow(config.window_width, config.window_height, "Flipper");
+        rl.initWindow(window_width, window_height, "Flipper");
         defer rl.closeWindow();
 
-        rl.setWindowMonitor(3);
+        rl.setWindowMonitor(2);
 
-        try self.addWall(Wall.init(0, 0, 0, 720)); // left
-        try self.addWall(Wall.init(1281, 0, 1281, 720)); // right
-        try self.addWall(Wall.init(0, 721, 1280, 721)); // bottom
-        try self.addWall(Wall.init(0, 0, 1280, 0)); // top
-        try self.addWall(Wall.init(0, 400, 400, 720));
+        try self.addWall(Wall.init(1, 0, 1, 1280)); // left
+        try self.addWall(Wall.init(720, 0, 720, 1280)); // right
+        try self.addWall(Wall.init(0, 1280, 720, 1280)); // bottom
+        try self.addWall(Wall.init(0, 1, 720, 1)); // top
+        try self.addWall(Wall.init(0, 900, 300, 1280));
+        try self.addWall(Wall.init(720, 900, 720 - 300, 1280));
 
         const ball = Ball.init(100, 50, &self.walls);
         try self.addBall(ball);

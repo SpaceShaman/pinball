@@ -1,6 +1,5 @@
 const std = @import("std");
 const rl = @import("raylib");
-const config = @import("config.zig");
 const Wall = @import("wall.zig").Wall;
 const print = @import("std").debug.print;
 
