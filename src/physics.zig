@@ -12,7 +12,7 @@ pub fn checkCollisionBallWall(ball: *const Ball, wall: *const Wall) bool {
     );
 }
 
-pub fn resolveWallCollision(ball: *Ball, wall: *Wall) void {
+pub fn resolveWallCollision(ball: *Ball, wall: *const Wall) void {
     const reflection = lineReflect(ball, wall);
     const distance = reflection.length();
     const reflection_n = reflection.normalize();
@@ -27,7 +27,7 @@ pub fn resolveWallCollision(ball: *Ball, wall: *Wall) void {
     ball.velocity = velocity_t.add(reduced_velocity_n.negate());
 }
 
-fn lineReflect(ball: *Ball, wall: *Wall) Vector2 {
+fn lineReflect(ball: *Ball, wall: *const Wall) Vector2 {
     const start_end = wall.end.subtract(wall.start);
     const start_point = ball.position.subtract(wall.start);
     const t = start_end.dotProduct(start_point) / start_end.dotProduct(start_end);

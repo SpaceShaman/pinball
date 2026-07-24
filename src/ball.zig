@@ -11,9 +11,9 @@ pub const Ball = struct {
     gravity: f32 = 300,
     bounciness: f32 = 0.6,
     radius: f32 = 20,
-    walls: *std.ArrayList(Wall),
+    walls: []const Wall,
 
-    pub fn init(x: f32, y: f32, walls: *std.ArrayList(Wall)) Ball {
+    pub fn init(x: f32, y: f32, walls: []const Wall) Ball {
         return Ball{ .position = Vector2.init(x, y), .walls = walls };
     }
 
@@ -27,7 +27,7 @@ pub const Ball = struct {
         self.position = self.position.add(dt_velocity);
         self.velocity.y += dt * self.gravity;
 
-        for (self.walls.items) |*wall| {
+        for (self.walls) |*wall| {
             if (physics.checkCollisionBallWall(self, wall)) {
                 physics.resolveWallCollision(self, wall);
             }
