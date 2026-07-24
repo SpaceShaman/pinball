@@ -3,7 +3,15 @@ const Vector2 = rl.Vector2;
 const Ball = @import("ball.zig").Ball;
 const Wall = @import("wall.zig").Wall;
 
-pub fn checkCollisionBallWall(ball: *const Ball, wall: *const Wall) bool {
+pub fn resolveWallCollisions(ball: *Ball, walls: []const Wall) void {
+    for (walls) |*wall| {
+        if (checkCollisionWall(ball, wall)) {
+            resolveWallCollision(ball, wall);
+        }
+    }
+}
+
+fn checkCollisionWall(ball: *const Ball, wall: *const Wall) bool {
     return rl.checkCollisionCircleLine(
         ball.position,
         ball.radius,
@@ -12,7 +20,7 @@ pub fn checkCollisionBallWall(ball: *const Ball, wall: *const Wall) bool {
     );
 }
 
-pub fn resolveWallCollision(ball: *Ball, wall: *const Wall) void {
+fn resolveWallCollision(ball: *Ball, wall: *const Wall) void {
     const reflection = lineReflect(ball, wall);
     const distance = reflection.length();
     const reflection_n = reflection.normalize();

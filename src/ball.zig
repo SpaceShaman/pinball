@@ -27,10 +27,6 @@ pub const Ball = struct {
         self.position = self.position.add(dt_velocity);
         self.velocity.y += dt * self.gravity;
 
-        for (self.walls) |*wall| {
-            if (physics.checkCollisionBallWall(self, wall)) {
-                physics.resolveWallCollision(self, wall);
-            }
-        }
+        physics.resolveWallCollisions(self, self.walls);
     }
 };
