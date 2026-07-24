@@ -2,7 +2,6 @@ const std = @import("std");
 const print = @import("std").debug.print;
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
-const Wall = @import("Wall.zig");
 
 const Ball = @This();
 
