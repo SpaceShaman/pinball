@@ -3,7 +3,6 @@ const print = @import("std").debug.print;
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
 const Wall = @import("Wall.zig");
-const collisions = @import("collisions.zig");
 
 const Ball = @This();
 
@@ -12,10 +11,9 @@ velocity: Vector2 = Vector2.init(0, 0),
 gravity: f32 = 300,
 bounciness: f32 = 0.6,
 radius: f32 = 20,
-walls: []const Wall,
 
-pub fn init(x: f32, y: f32, walls: []const Wall) Ball {
-    return Ball{ .position = Vector2.init(x, y), .walls = walls };
+pub fn init(x: f32, y: f32) Ball {
+    return Ball{ .position = Vector2.init(x, y) };
 }
 
 pub fn draw(self: *const Ball) void {
@@ -27,6 +25,4 @@ pub fn update(self: *Ball) void {
     const dt_velocity = self.velocity.scale(dt);
     self.position = self.position.add(dt_velocity);
     self.velocity.y += dt * self.gravity;
-
-    collisions.resolveWallCollisions(self, self.walls);
 }
