@@ -64,6 +64,6 @@ pub const Game = struct {
     }
 
     fn physics(self: *Game) void {
-        for (self.balls.items) |*ball| ball.physics();
+        for (self.balls.items) |*ball| ball.update();
     }
 };
