@@ -1,7 +1,7 @@
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
-const Ball = @import("ball.zig").Ball;
-const Wall = @import("wall.zig").Wall;
+const Ball = @import("Ball.zig");
+const Wall = @import("Wall.zig");
 
 pub fn resolveWallCollisions(ball: *Ball, walls: []const Wall) void {
     for (walls) |*wall| {

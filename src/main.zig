@@ -1,7 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
-const Ball = @import("ball.zig").Ball;
-const Wall = @import("wall.zig").Wall;
+const Ball = @import("Ball.zig");
+const Wall = @import("Wall.zig");
 
 const window_width = 720;
 const window_height = 1280;
