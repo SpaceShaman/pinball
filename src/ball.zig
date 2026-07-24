@@ -1,7 +1,7 @@
 const std = @import("std");
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
-const physics = @import("physics.zig");
+const collisions = @import("collisions.zig");
 const Wall = @import("wall.zig").Wall;
 const print = @import("std").debug.print;
 
@@ -27,6 +27,6 @@ pub const Ball = struct {
         self.position = self.position.add(dt_velocity);
         self.velocity.y += dt * self.gravity;
 
-        physics.resolveWallCollisions(self, self.walls);
+        collisions.resolveWallCollisions(self, self.walls);
     }
 };
