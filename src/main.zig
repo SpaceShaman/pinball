@@ -27,16 +27,17 @@ pub fn main() !void {
     rl.setWindowMonitor(2);
 
     while (!rl.windowShouldClose()) {
-        update(&ball, &walls);
+        update(&ball, &walls, &flipper);
         draw(&ball, &walls);
         flipper.update();
         flipper.draw();
     }
 }
 
-fn update(ball: *Ball, walls: []const Wall) void {
+fn update(ball: *Ball, walls: []const Wall, flipper: *Flipper) void {
     ball.update();
     collisions.resolveWallCollisions(ball, walls);
+    collisions.resolveFlipperCollisions(ball, flipper);
 }
 
 fn draw(ball: *Ball, walls: []const Wall) void {

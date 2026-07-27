@@ -2,6 +2,22 @@ const rl = @import("raylib");
 const Vector2 = rl.Vector2;
 const Ball = @import("Ball.zig");
 const Wall = @import("Wall.zig");
+const Flipper = @import("Flipper.zig");
+
+pub fn resolveFlipperCollisions(ball: *Ball, flipper: *const Flipper) void {
+    const points = flipper.points;
+    const walls = [4]Wall{
+        .{ .start = points[0], .end = points[1] },
+        .{ .start = points[1], .end = points[2] },
+        .{ .start = points[0], .end = points[3] },
+        .{ .start = points[2], .end = points[3] },
+    };
+
+    for (walls) |wall| {
+        wall.draw();
+    }
+    resolveWallCollisions(ball, &walls);
+}
 
 pub fn resolveWallCollisions(ball: *Ball, walls: []const Wall) void {
     for (walls) |*wall| {

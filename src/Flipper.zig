@@ -12,8 +12,8 @@ pub fn init(x: f32, y: f32) Flipper {
     const width = 100;
     const points = [4]Vector2{
         .{ .x = 0 + position.x, .y = position.y - height / 2 },
-        .{ .x = 0 + position.x, .y = height / 2 + position.y },
-        .{ .x = width + position.x, .y = height / 2 + position.y },
+        .{ .x = 0 + position.x, .y = position.y + height / 2 },
+        .{ .x = width + position.x, .y = position.y + height / 2 },
         .{ .x = width + position.x, .y = position.y - height / 2 },
     };
     return Flipper{ .position = position, .points = points };
@@ -26,9 +26,13 @@ pub fn draw(self: *const Flipper) void {
 }
 
 pub fn update(self: *Flipper) void {
-    if (rl.isKeyDown(rl.KeyboardKey.j)) {
+    if (rl.isKeyDown(rl.KeyboardKey.left)) {
         const dt = rl.getFrameTime();
         self.rotate(-10 * dt);
+    }
+    if (rl.isKeyDown(rl.KeyboardKey.right)) {
+        const dt = rl.getFrameTime();
+        self.rotate(10 * dt);
     }
 }
 
