@@ -2,6 +2,7 @@ const std = @import("std");
 const rl = @import("raylib");
 const Ball = @import("Ball.zig");
 const Wall = @import("Wall.zig");
+const Flipper = @import("Flipper.zig");
 const collisions = @import("collisions.zig");
 
 const window_width = 720;
@@ -18,6 +19,8 @@ pub fn main() !void {
     };
     var ball = Ball.init(100, 50);
 
+    var flipper = Flipper.init(100, 700);
+
     rl.initWindow(window_width, window_height, "Flipper");
     defer rl.closeWindow();
 
@@ -26,6 +29,8 @@ pub fn main() !void {
     while (!rl.windowShouldClose()) {
         update(&ball, &walls);
         draw(&ball, &walls);
+        flipper.update();
+        flipper.draw();
     }
 }
 
