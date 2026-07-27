@@ -32,7 +32,7 @@ fn resolveFlipperCollision(ball: *Ball, wall: Wall, flipper: Flipper) void {
 
     var velocity_n = reflection_n.scale(ball.velocity.dotProduct(reflection_n));
 
-    velocity_n = velocity_n.add(velocity_n.scale(flipper.velocity * 0.1).negate());
+    velocity_n = velocity_n.scale(flipper.velocity * 0.1);
     const velocity_t = ball.velocity.subtract(velocity_n);
     const reduced_velocity_n = velocity_n.scale(ball.bounciness);
     ball.velocity = velocity_t.add(reduced_velocity_n.negate());

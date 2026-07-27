@@ -1,11 +1,13 @@
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
 
+const default_angle: f32 = 0.5;
 const Flipper = @This();
 
 position: Vector2,
 points: [4]Vector2,
 velocity: f32 = 0,
+angle: f32 = 0,
 
 pub fn init(x: f32, y: f32) Flipper {
     const position = Vector2.init(x, y);
@@ -17,7 +19,9 @@ pub fn init(x: f32, y: f32) Flipper {
         .{ .x = width + position.x, .y = position.y + height / 2 },
         .{ .x = width + position.x, .y = position.y - height / 2 },
     };
-    return Flipper{ .position = position, .points = points };
+    var flipper = Flipper{ .position = position, .points = points };
+    flipper.rotate(default_angle);
+    return flipper;
 }
 
 pub fn draw(self: *const Flipper) void {
@@ -27,20 +31,22 @@ pub fn draw(self: *const Flipper) void {
 }
 
 pub fn update(self: *Flipper) void {
-    if (rl.isKeyDown(rl.KeyboardKey.left)) {
-        self.velocity = -10;
-    } else if (rl.isKeyDown(rl.KeyboardKey.right)) {
-        self.velocity = 10;
-    } else {
-        self.velocity = 0;
+    if (rl.isKeyPressed(rl.KeyboardKey.left)) {
+        self.velocity = 15;
     }
     if (self.velocity != 0) {
         const dt = rl.getFrameTime();
-        self.rotate(self.velocity * dt);
+        self.angle += -self.velocity * dt;
+        self.rotate(-self.velocity * dt);
+    }
+    if (self.angle < -2) {
+        self.rotate(-self.angle);
+        self.angle = 0;
+        self.velocity = 0;
     }
 }
 
-fn rotate(self: *Flipper, angle: f32) void {
+pub fn rotate(self: *Flipper, angle: f32) void {
     for (&self.points) |*point| {
         point.* = point.subtract(self.position).rotate(angle).add(self.position);
     }
