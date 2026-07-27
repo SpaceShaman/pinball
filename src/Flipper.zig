@@ -61,13 +61,13 @@ pub fn update(self: *Flipper) void {
     }
 
     if (self.side == Side.left) {
-        if (self.angle < -2) {
+        if (self.angle < -1.5) {
             self.rotate(-self.angle);
             self.angle = 0;
             self.velocity = 0;
         }
     } else {
-        if (self.angle > 2) {
+        if (self.angle > 1.5) {
             self.rotate(-self.angle);
             self.angle = 0;
             self.velocity = 0;
