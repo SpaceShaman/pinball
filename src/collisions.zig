@@ -20,14 +20,14 @@ pub fn resolveFlipperCollisions(ball: *Ball, flipper: *const Flipper) void {
 }
 
 pub fn resolveWallCollisions(ball: *Ball, walls: []const Wall) void {
-    for (walls) |*wall| {
+    for (walls) |wall| {
         if (checkCollisionWall(ball, wall)) {
             resolveWallCollision(ball, wall);
         }
     }
 }
 
-fn checkCollisionWall(ball: *const Ball, wall: *const Wall) bool {
+fn checkCollisionWall(ball: *const Ball, wall: Wall) bool {
     return rl.checkCollisionCircleLine(
         ball.position,
         ball.radius,
@@ -36,7 +36,7 @@ fn checkCollisionWall(ball: *const Ball, wall: *const Wall) bool {
     );
 }
 
-fn resolveWallCollision(ball: *Ball, wall: *const Wall) void {
+fn resolveWallCollision(ball: *Ball, wall: Wall) void {
     const reflection = lineReflect(ball, wall);
     const distance = reflection.length();
     const reflection_n = reflection.normalize();
@@ -51,7 +51,7 @@ fn resolveWallCollision(ball: *Ball, wall: *const Wall) void {
     ball.velocity = velocity_t.add(reduced_velocity_n.negate());
 }
 
-fn lineReflect(ball: *Ball, wall: *const Wall) Vector2 {
+fn lineReflect(ball: *Ball, wall: Wall) Vector2 {
     const start_end = wall.end.subtract(wall.start);
     const start_point = ball.position.subtract(wall.start);
     const t = start_end.dotProduct(start_point) / start_end.dotProduct(start_end);
