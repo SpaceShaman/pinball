@@ -26,8 +26,10 @@ pub fn draw(self: *const Flipper) void {
 }
 
 pub fn update(self: *Flipper) void {
-    const dt = rl.getFrameTime();
-    self.rotate(-1 * dt);
+    if (rl.isKeyDown(rl.KeyboardKey.j)) {
+        const dt = rl.getFrameTime();
+        self.rotate(-10 * dt);
+    }
 }
 
 fn rotate(self: *Flipper, angle: f32) void {

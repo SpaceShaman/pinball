@@ -19,7 +19,7 @@ pub fn main() !void {
     };
     var ball = Ball.init(100, 50);
 
-    var flipper = Flipper.init(100, 700);
+    var flipper = Flipper.init(240, 1230);
 
     rl.initWindow(window_width, window_height, "Flipper");
     defer rl.closeWindow();
