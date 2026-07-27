@@ -19,7 +19,8 @@ pub fn main() !void {
     };
     var ball = Ball.init(100, 50);
 
-    var flipper = Flipper.init(230, 1230);
+    var flipper_left = Flipper.init(230, 1230, Flipper.Side.left);
+    var flipper_right = Flipper.init(720 - 230, 1230, Flipper.Side.right);
 
     rl.initWindow(window_width, window_height, "Flipper");
     defer rl.closeWindow();
@@ -27,17 +28,16 @@ pub fn main() !void {
     rl.setWindowMonitor(2);
 
     while (!rl.windowShouldClose()) {
-        update(&ball, &walls, flipper);
+        ball.update();
+        flipper_left.update();
+        flipper_right.update();
+        collisions.resolveWallCollisions(&ball, &walls);
+        collisions.resolveFlipperCollisions(&ball, flipper_left);
+        collisions.resolveFlipperCollisions(&ball, flipper_right);
         draw(&ball, &walls);
-        flipper.update();
-        flipper.draw();
+        flipper_left.draw();
+        flipper_right.draw();
     }
-}
-
-fn update(ball: *Ball, walls: []const Wall, flipper: Flipper) void {
-    ball.update();
-    collisions.resolveWallCollisions(ball, walls);
-    collisions.resolveFlipperCollisions(ball, flipper);
 }
 
 fn draw(ball: *Ball, walls: []const Wall) void {
