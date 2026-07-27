@@ -5,6 +5,7 @@ const Flipper = @This();
 
 position: Vector2,
 points: [4]Vector2,
+velocity: f32 = 0,
 
 pub fn init(x: f32, y: f32) Flipper {
     const position = Vector2.init(x, y);
@@ -27,12 +28,15 @@ pub fn draw(self: *const Flipper) void {
 
 pub fn update(self: *Flipper) void {
     if (rl.isKeyDown(rl.KeyboardKey.left)) {
-        const dt = rl.getFrameTime();
-        self.rotate(-10 * dt);
+        self.velocity = -10;
+    } else if (rl.isKeyDown(rl.KeyboardKey.right)) {
+        self.velocity = 10;
+    } else {
+        self.velocity = 0;
     }
-    if (rl.isKeyDown(rl.KeyboardKey.right)) {
+    if (self.velocity != 0) {
         const dt = rl.getFrameTime();
-        self.rotate(10 * dt);
+        self.rotate(self.velocity * dt);
     }
 }
 

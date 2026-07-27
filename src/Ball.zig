@@ -7,8 +7,8 @@ const Ball = @This();
 
 position: Vector2,
 velocity: Vector2 = Vector2.init(0, 0),
-gravity: f32 = 300,
-bounciness: f32 = 0.6,
+gravity: f32 = 500,
+bounciness: f32 = 0.4,
 radius: f32 = 20,
 
 pub fn init(x: f32, y: f32) Ball {

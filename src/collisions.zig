@@ -4,7 +4,7 @@ const Ball = @import("Ball.zig");
 const Wall = @import("Wall.zig");
 const Flipper = @import("Flipper.zig");
 
-pub fn resolveFlipperCollisions(ball: *Ball, flipper: *const Flipper) void {
+pub fn resolveFlipperCollisions(ball: *Ball, flipper: Flipper) void {
     const points = flipper.points;
     const walls = [4]Wall{
         .{ .start = points[0], .end = points[1] },
@@ -14,9 +14,28 @@ pub fn resolveFlipperCollisions(ball: *Ball, flipper: *const Flipper) void {
     };
 
     for (walls) |wall| {
+        if (checkCollisionWall(ball, wall)) {
+            resolveFlipperCollision(ball, wall, flipper);
+        }
         wall.draw();
     }
-    resolveWallCollisions(ball, &walls);
+}
+
+fn resolveFlipperCollision(ball: *Ball, wall: Wall, flipper: Flipper) void {
+    const reflection = lineReflect(ball, wall);
+    const distance = reflection.length();
+    const reflection_n = reflection.normalize();
+    if (distance < ball.radius) {
+        const depth = ball.radius - distance;
+        ball.position = ball.position.add(reflection_n.negate().scale(depth));
+    }
+
+    var velocity_n = reflection_n.scale(ball.velocity.dotProduct(reflection_n));
+
+    velocity_n = velocity_n.add(velocity_n.scale(flipper.velocity * 0.1).negate());
+    const velocity_t = ball.velocity.subtract(velocity_n);
+    const reduced_velocity_n = velocity_n.scale(ball.bounciness);
+    ball.velocity = velocity_t.add(reduced_velocity_n.negate());
 }
 
 pub fn resolveWallCollisions(ball: *Ball, walls: []const Wall) void {
