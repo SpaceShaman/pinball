@@ -74,6 +74,6 @@ fn lineReflect(ball: *Ball, wall: Wall) Vector2 {
     const start_end = wall.end.subtract(wall.start);
     const start_point = ball.position.subtract(wall.start);
     const t = start_end.dotProduct(start_point) / start_end.dotProduct(start_end);
-    const closest_point = wall.start.add(start_end.multiply(Vector2.init(t, t)));
+    const closest_point = wall.start.add(start_end.scale(t));
     return closest_point.subtract(ball.position);
 }
