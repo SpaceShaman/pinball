@@ -26,13 +26,10 @@ pub fn linearVelocity(self: Wall, point: Vector2) Vector2 {
     const closest_point = self.closestPoint(point);
     const start_to_closest = closest_point.subtract(self.start);
 
-    if (self.angular_velocity > 0) {
+    if (self.angular_velocity != 0)
         return Vector2.init(-start_to_closest.y, start_to_closest.x)
             .scale(self.angular_velocity);
-    } else if (self.angular_velocity < 1) {
-        return Vector2.init(start_to_closest.y, -start_to_closest.x)
-            .scale(self.angular_velocity);
-    }
+
     return Vector2.zero();
 }
 
@@ -100,7 +97,7 @@ test "linearVelocity negative angular_velocity" {
     const wall = Wall{ .start = Vector2.zero(), .end = Vector2.init(2, 0), .angular_velocity = -3 };
     const point = Vector2.init(2, 5);
 
-    try expectEqual(Vector2.init(0, 6), wall.linearVelocity(point));
+    try expectEqual(Vector2.init(0, -6), wall.linearVelocity(point));
 }
 
 test "linearVelocity complicated" {

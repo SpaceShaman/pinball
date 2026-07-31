@@ -19,7 +19,7 @@ fn resolveWallCollision(ball: *Ball, wall: Wall) void {
     const velocity_n = collision_normal.scale(ball.velocity.dotProduct(collision_normal));
     const velocity_t = ball.velocity.subtract(velocity_n);
     const reduced_velocity_n = velocity_n.scale(ball.bounciness);
-    ball.velocity = velocity_t.add(reduced_velocity_n.negate());
+    ball.velocity = velocity_t.add(reduced_velocity_n.negate()).add(wall.linearVelocity(ball.position));
 }
 
 fn reduceDepth(ball: *Ball, wall: Wall) void {

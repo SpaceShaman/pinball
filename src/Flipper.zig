@@ -55,10 +55,10 @@ pub fn draw(self: *const Flipper) void {
 
 pub fn update(self: *Flipper) void {
     var key = rl.KeyboardKey.right;
-    var vel: f32 = 15;
+    var vel: f32 = 10;
     if (self.side == Side.left) {
         key = rl.KeyboardKey.left;
-        vel = -15;
+        vel = -10;
     }
 
     if (rl.isKeyPressed(key)) {
