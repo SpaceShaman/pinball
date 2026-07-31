@@ -1,3 +1,5 @@
+const std = @import("std");
+const print = std.debug.print;
 const math = @import("std").math;
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
@@ -69,12 +71,20 @@ pub fn update(self: *Flipper) void {
     if (self.velocity != 0) {
         self.angle += velocity_dt;
         self.rotate(velocity_dt);
+        self.setWallsVelocity();
     }
 
     if (self.angle < -1.5 or self.angle > 1.5) {
         self.rotate(-self.angle);
         self.angle = 0;
         self.velocity = 0;
+        self.setWallsVelocity();
+    }
+}
+
+fn setWallsVelocity(self: *Flipper) void {
+    for (&self.walls) |*wall| {
+        wall.setAngularVelocity(self.velocity);
     }
 }
 
