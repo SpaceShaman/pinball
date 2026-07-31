@@ -56,11 +56,11 @@ test "closestPoint" {
 test "collisionNormal" {
     const wall = Wall{ .start = Vector2.zero(), .end = Vector2.init(10, 0) };
     const point = Vector2.init(5, 5);
-    try expectEqual(Vector2.init(0, 1), wall.collisionNormal(point));
+    try expectEqual(Vector2.init(0, -1), wall.collisionNormal(point));
 }
 
 test "collisionNormal negative" {
     const wall = Wall{ .start = Vector2.zero(), .end = Vector2.init(10, 0) };
     const point = Vector2.init(10, -3);
-    try expectEqual(Vector2.init(0, -1), wall.collisionNormal(point));
+    try expectEqual(Vector2.init(0, 1), wall.collisionNormal(point));
 }
