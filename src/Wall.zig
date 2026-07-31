@@ -12,6 +12,10 @@ pub fn init(start_x: f32, start_y: f32, end_x: f32, end_y: f32) Wall {
     return Wall{ .start = Vector2.init(start_x, start_y), .end = Vector2.init(end_x, end_y) };
 }
 
+pub fn checkCollisionCircle(self: Wall, center: Vector2, radius: f32) bool {
+    return rl.checkCollisionCircleLine(center, radius, self.start, self.end);
+}
+
 pub fn collisionNormal(self: Wall, point: Vector2) Vector2 {
     return self.reflect(point).normalize();
 }

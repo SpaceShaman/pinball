@@ -33,8 +33,6 @@ pub fn main() !void {
         flipper_left.update();
         flipper_right.update();
         collisions.resolveWallCollisions(&ball, &walls);
-        collisions.resolveFlipperCollisions(&ball, flipper_left);
-        collisions.resolveFlipperCollisions(&ball, flipper_right);
         draw(&ball, &walls);
         flipper_left.draw();
         flipper_right.draw();
