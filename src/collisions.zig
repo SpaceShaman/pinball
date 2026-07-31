@@ -1,7 +1,7 @@
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
-const fl = @import("flipper");
 const Ball = @import("Ball.zig");
+const fl = @import("flipper");
 const Wall = fl.Wall;
 const Flipper = @import("Flipper.zig");
 
