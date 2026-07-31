@@ -8,6 +8,7 @@ const Wall = fl.Wall;
 
 const window_width = 720;
 const window_height = 1280;
+const physics_dt: f32 = 1.0 / 120.0;
 
 pub fn main() !void {
     const walls = [_]Wall{
@@ -20,8 +21,7 @@ pub fn main() !void {
     };
     var ball = Ball.init(100, 50);
 
-    var flipper_left = Flipper.init(230, 1230, Flipper.Side.left);
-    var flipper_right = Flipper.init(720 - 230, 1230, Flipper.Side.right);
+    var flippers = [2]Flipper{ Flipper.init(230, 1230, Flipper.Side.left), Flipper.init(720 - 230, 1230, Flipper.Side.right) };
 
     rl.initWindow(window_width, window_height, "Flipper");
     defer rl.closeWindow();
@@ -29,23 +29,22 @@ pub fn main() !void {
     rl.setWindowMonitor(2);
 
     while (!rl.windowShouldClose()) {
-        ball.update();
-        flipper_left.update();
-        flipper_right.update();
-        collisions.resolveWallCollisions(&ball, &walls);
-        collisions.resolveWallCollisions(&ball, &flipper_left.walls);
-        collisions.resolveWallCollisions(&ball, &flipper_right.walls);
-        draw(&ball, &walls);
-        flipper_left.draw();
-        flipper_right.draw();
+        update(&ball, &walls, &flippers);
+        rl.beginDrawing();
+        defer rl.endDrawing();
+        rl.clearBackground(.black);
+
+        ball.draw();
+        for (&walls) |*wall| wall.draw();
+        for (&flippers) |*flipper| flipper.draw();
     }
 }
 
-fn draw(ball: *Ball, walls: []const Wall) void {
-    rl.beginDrawing();
-    defer rl.endDrawing();
-    rl.clearBackground(.black);
-
-    ball.draw();
-    for (walls) |*wall| wall.draw();
+fn update(ball: *Ball, walls: []const Wall, flippers: []Flipper) void {
+    ball.update();
+    collisions.resolveWallCollisions(ball, walls);
+    for (flippers) |*flipper| {
+        flipper.update();
+        collisions.resolveWallCollisions(ball, &flipper.walls);
+    }
 }
