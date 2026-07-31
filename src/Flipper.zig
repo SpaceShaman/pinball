@@ -53,39 +53,32 @@ pub fn draw(self: *const Flipper) void {
 
 pub fn update(self: *Flipper) void {
     var key = rl.KeyboardKey.right;
+    var vel: f32 = 15;
     if (self.side == Side.left) {
         key = rl.KeyboardKey.left;
+        vel = -15;
     }
 
     if (rl.isKeyPressed(key)) {
-        self.velocity = 15;
+        self.velocity = vel;
     }
 
     const dt = rl.getFrameTime();
-    var velocity_dt = self.velocity * dt;
-    if (self.side == Side.left) velocity_dt = -velocity_dt;
+    const velocity_dt = self.velocity * dt;
 
     if (self.velocity != 0) {
         self.angle += velocity_dt;
         self.rotate(velocity_dt);
     }
 
-    if (self.side == Side.left) {
-        if (self.angle < -1.5) {
-            self.rotate(-self.angle);
-            self.angle = 0;
-            self.velocity = 0;
-        }
-    } else {
-        if (self.angle > 1.5) {
-            self.rotate(-self.angle);
-            self.angle = 0;
-            self.velocity = 0;
-        }
+    if (self.angle < -1.5 or self.angle > 1.5) {
+        self.rotate(-self.angle);
+        self.angle = 0;
+        self.velocity = 0;
     }
 }
 
-pub fn rotate(self: *Flipper, angle: f32) void {
+fn rotate(self: *Flipper, angle: f32) void {
     for (&self.walls) |*wall| {
         wall.start = wall.start.subtract(self.position).rotate(angle).add(self.position);
         wall.end = wall.end.subtract(self.position).rotate(angle).add(self.position);
