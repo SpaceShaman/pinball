@@ -31,6 +31,7 @@ pub fn main() !void {
     var accumulator: f32 = 0.0;
 
     while (!rl.windowShouldClose()) {
+        onKeyPress(&flippers);
         const frame_dt = @min(rl.getFrameTime(), 0.1);
         accumulator += frame_dt;
 
@@ -39,6 +40,12 @@ pub fn main() !void {
             update(&ball, &walls, &flippers, physics_dt);
             accumulator -= physics_dt;
         }
+    }
+}
+
+fn onKeyPress(flippers: []Flipper) void {
+    for (flippers) |*flipper| {
+        flipper.onKeyPress();
     }
 }
 

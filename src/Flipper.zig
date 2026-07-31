@@ -53,7 +53,7 @@ pub fn draw(self: *const Flipper) void {
     }
 }
 
-pub fn update(self: *Flipper, dt: f32) void {
+pub fn onKeyPress(self: *Flipper) void {
     var key = rl.KeyboardKey.right;
     var vel: f32 = 10;
     if (self.side == Side.left) {
@@ -64,7 +64,9 @@ pub fn update(self: *Flipper, dt: f32) void {
     if (rl.isKeyPressed(key)) {
         self.velocity = vel;
     }
+}
 
+pub fn update(self: *Flipper, dt: f32) void {
     const velocity_dt = self.velocity * dt;
 
     if (self.velocity != 0) {
