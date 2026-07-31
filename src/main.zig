@@ -1,9 +1,10 @@
 const std = @import("std");
 const rl = @import("raylib");
 const Ball = @import("Ball.zig");
-const Wall = @import("Wall.zig");
 const Flipper = @import("Flipper.zig");
 const collisions = @import("collisions.zig");
+const fl = @import("flipper");
+const Wall = fl.Wall;
 
 const window_width = 720;
 const window_height = 1280;

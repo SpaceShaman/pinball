@@ -1,7 +1,8 @@
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
+const fl = @import("flipper");
 const Ball = @import("Ball.zig");
-const Wall = @import("Wall.zig");
+const Wall = fl.Wall;
 const Flipper = @import("Flipper.zig");
 
 pub fn resolveFlipperCollisions(ball: *Ball, flipper: Flipper) void {
@@ -56,15 +57,15 @@ fn checkCollisionWall(ball: *const Ball, wall: Wall) bool {
 }
 
 fn resolveWallCollision(ball: *Ball, wall: Wall) void {
-    const reflection = lineReflect(ball, wall);
-    const distance = reflection.length();
-    const reflection_n = reflection.normalize();
+    const collision_normal = wall.collisionNormal(ball.position);
+
+    const distance = wall.distance(ball.position);
     if (distance < ball.radius) {
         const depth = ball.radius - distance;
-        ball.position = ball.position.add(reflection_n.negate().scale(depth));
+        ball.position = ball.position.add(collision_normal.negate().scale(depth));
     }
 
-    const velocity_n = reflection_n.scale(ball.velocity.dotProduct(reflection_n));
+    const velocity_n = collision_normal.scale(ball.velocity.dotProduct(collision_normal));
     const velocity_t = ball.velocity.subtract(velocity_n);
     const reduced_velocity_n = velocity_n.scale(ball.bounciness);
     ball.velocity = velocity_t.add(reduced_velocity_n.negate());
