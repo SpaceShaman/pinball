@@ -84,9 +84,8 @@ pub fn update(self: *Flipper, dt: f32) void {
 }
 
 fn setWallsVelocity(self: *Flipper) void {
-    for (&self.walls) |*wall| {
-        wall.setAngularVelocity(self.velocity);
-    }
+    self.walls[0].angular_velocity = self.velocity;
+    self.walls[1].angular_velocity = self.velocity;
 }
 
 fn rotate(self: *Flipper, angle: f32) void {

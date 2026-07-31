@@ -21,7 +21,10 @@ pub fn main() !void {
     };
     var ball = Ball.init(100, 50);
 
-    var flippers = [2]Flipper{ Flipper.init(230, 1230, Flipper.Side.left), Flipper.init(720 - 230, 1230, Flipper.Side.right) };
+    var flippers = [2]Flipper{
+        Flipper.init(230, 1230, Flipper.Side.left),
+        Flipper.init(720 - 230, 1230, Flipper.Side.right),
+    };
 
     rl.initWindow(window_width, window_height, "Flipper");
     defer rl.closeWindow();

@@ -41,10 +41,6 @@ pub fn distance(self: Wall, point: Vector2) f32 {
     return self.reflect(point).length();
 }
 
-pub fn setAngularVelocity(self: *Wall, velocity: f32) void {
-    self.angular_velocity = velocity;
-}
-
 fn reflect(self: Wall, point: Vector2) Vector2 {
     return self.closestPoint(point).subtract(point);
 }
