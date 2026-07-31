@@ -29,14 +29,8 @@ pub fn main() !void {
     rl.setWindowMonitor(2);
 
     while (!rl.windowShouldClose()) {
+        draw(&ball, &walls, &flippers);
         update(&ball, &walls, &flippers);
-        rl.beginDrawing();
-        defer rl.endDrawing();
-        rl.clearBackground(.black);
-
-        ball.draw();
-        for (&walls) |*wall| wall.draw();
-        for (&flippers) |*flipper| flipper.draw();
     }
 }
 
@@ -47,4 +41,14 @@ fn update(ball: *Ball, walls: []const Wall, flippers: []Flipper) void {
         flipper.update();
         collisions.resolveWallCollisions(ball, &flipper.walls);
     }
+}
+
+fn draw(ball: *Ball, walls: []const Wall, flippers: []const Flipper) void {
+    rl.beginDrawing();
+    defer rl.endDrawing();
+    rl.clearBackground(.black);
+
+    ball.draw();
+    for (walls) |*wall| wall.draw();
+    for (flippers) |*flipper| flipper.draw();
 }
