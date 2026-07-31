@@ -19,8 +19,7 @@ pub fn draw(self: *const Ball) void {
     rl.drawCircleV(self.position, self.radius, .white);
 }
 
-pub fn update(self: *Ball) void {
-    const dt = rl.getFrameTime();
+pub fn update(self: *Ball, dt: f32) void {
     const dt_velocity = self.velocity.scale(dt);
     self.position = self.position.add(dt_velocity);
     self.velocity.y += dt * self.gravity;

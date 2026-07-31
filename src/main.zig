@@ -28,17 +28,25 @@ pub fn main() !void {
 
     rl.setWindowMonitor(2);
 
+    var accumulator: f32 = 0.0;
+
     while (!rl.windowShouldClose()) {
+        const frame_dt = @min(rl.getFrameTime(), 0.1);
+        accumulator += frame_dt;
+
         draw(&ball, &walls, &flippers);
-        update(&ball, &walls, &flippers);
+        while (accumulator >= physics_dt) {
+            update(&ball, &walls, &flippers, physics_dt);
+            accumulator -= physics_dt;
+        }
     }
 }
 
-fn update(ball: *Ball, walls: []const Wall, flippers: []Flipper) void {
-    ball.update();
+fn update(ball: *Ball, walls: []const Wall, flippers: []Flipper, dt: f32) void {
+    ball.update(dt);
     collisions.resolveWallCollisions(ball, walls);
     for (flippers) |*flipper| {
-        flipper.update();
+        flipper.update(dt);
         collisions.resolveWallCollisions(ball, &flipper.walls);
     }
 }
