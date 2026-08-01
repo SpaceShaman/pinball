@@ -41,6 +41,8 @@ pub fn start(self: *Game) void {
             accumulator -= physics_dt;
         }
         self.draw();
+
+        if (self.context.lives == 0) break;
     }
 }
 
