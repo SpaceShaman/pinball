@@ -11,6 +11,7 @@ pub const Side = enum(c_int) {
 };
 
 const default_angle: f32 = 0.5;
+
 const Flipper = @This();
 
 position: Vector2,

@@ -1,6 +1,7 @@
 const Ball = @import("Ball.zig");
 const Wall = @import("Wall.zig");
 const Flipper = @import("Flipper.zig");
+const drawHud = @import("hud.zig").drawHud;
 const resolveWallCollisions = @import("collisions.zig").resolveWallCollisions;
 const rl = @import("raylib");
 
@@ -9,6 +10,9 @@ const Game = @This();
 ball: *Ball,
 walls: []const Wall,
 flippers: []Flipper,
+lives: u4 = 3,
+window_width: i32 = 720,
+window_height: i32 = 1280,
 
 pub fn init(ball: *Ball, walls: []const Wall, flippers: []Flipper) Game {
     return Game{
@@ -19,7 +23,7 @@ pub fn init(ball: *Ball, walls: []const Wall, flippers: []Flipper) Game {
 }
 
 pub fn start(self: *Game) void {
-    rl.initWindow(720, 1280, "Flipper");
+    rl.initWindow(self.window_width, self.window_height, "Flipper");
     defer rl.closeWindow();
 
     rl.setWindowMonitor(2);
@@ -65,4 +69,5 @@ fn draw(self: *Game) void {
     self.ball.draw();
     for (self.walls) |*wall| wall.draw();
     for (self.flippers) |*flipper| flipper.draw();
+    drawHud(self.window_width, self.lives);
 }
