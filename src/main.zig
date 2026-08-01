@@ -3,8 +3,8 @@ const rl = @import("raylib");
 const Ball = @import("Ball.zig");
 const Flipper = @import("Flipper.zig");
 const collisions = @import("collisions.zig");
-const fl = @import("flipper");
-const Wall = fl.Wall;
+const pinball = @import("pinball");
+const Wall = pinball.Wall;
 
 const window_width = 720;
 const window_height = 1280;
