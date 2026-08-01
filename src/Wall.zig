@@ -1,6 +1,3 @@
-const std = @import("std");
-const print = std.debug.print;
-const expectEqual = std.testing.expectEqual;
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
 
@@ -64,41 +61,37 @@ fn startToPoint(self: Wall, point: Vector2) Vector2 {
     return point.subtract(self.start);
 }
 
+const expectEqual = @import("std").testing.expectEqual;
+
 test "closestPoint" {
-    const wall = Wall{ .start = Vector2.zero(), .end = Vector2.init(10, 0) };
-    const point = Vector2.init(5, 5);
-    try expectEqual(Vector2.init(5, 0), wall.closestPoint(point));
+    const wall = Wall.init(0, 0, 10, 0);
+    try expectEqual(Vector2.init(5, 0), wall.closestPoint(Vector2.init(5, 5)));
 }
 
 test "collisionNormal" {
-    const wall = Wall{ .start = Vector2.zero(), .end = Vector2.init(10, 0) };
-    const point = Vector2.init(5, 5);
-    try expectEqual(Vector2.init(0, -1), wall.collisionNormal(point));
+    const wall = Wall.init(0, 0, 10, 0);
+    try expectEqual(Vector2.init(0, -1), wall.collisionNormal(Vector2.init(5, 5)));
 }
 
 test "collisionNormal negative" {
-    const wall = Wall{ .start = Vector2.zero(), .end = Vector2.init(10, 0) };
-    const point = Vector2.init(10, -3);
-    try expectEqual(Vector2.init(0, 1), wall.collisionNormal(point));
+    const wall = Wall.init(0, 0, 10, 0);
+    try expectEqual(Vector2.init(0, 1), wall.collisionNormal(Vector2.init(10, -3)));
 }
 
 test "linearVelocity" {
-    const wall = Wall{ .start = Vector2.zero(), .end = Vector2.init(2, 0), .angular_velocity = 3 };
-    const point = Vector2.init(2, 5);
-
-    try expectEqual(Vector2.init(0, 6), wall.linearVelocity(point));
+    var wall = Wall.init(0, 0, 2, 0);
+    wall.angular_velocity = 3;
+    try expectEqual(Vector2.init(0, 6), wall.linearVelocity(Vector2.init(2, 5)));
 }
 
 test "linearVelocity negative angular_velocity" {
-    const wall = Wall{ .start = Vector2.zero(), .end = Vector2.init(2, 0), .angular_velocity = -3 };
-    const point = Vector2.init(2, 5);
-
-    try expectEqual(Vector2.init(0, -6), wall.linearVelocity(point));
+    var wall = Wall.init(0, 0, 2, 0);
+    wall.angular_velocity = -3;
+    try expectEqual(Vector2.init(0, -6), wall.linearVelocity(Vector2.init(2, 5)));
 }
 
 test "linearVelocity complicated" {
-    const wall = Wall{ .start = Vector2.init(10, 10), .end = Vector2.init(13, 14), .angular_velocity = 2 };
-    const point = Vector2.init(13, 14);
-
-    try expectEqual(Vector2.init(-8, 6), wall.linearVelocity(point));
+    var wall = Wall.init(10, 10, 13, 14);
+    wall.angular_velocity = 2;
+    try expectEqual(Vector2.init(-8, 6), wall.linearVelocity(Vector2.init(13, 14)));
 }
