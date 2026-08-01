@@ -3,8 +3,7 @@ const print = std.debug.print;
 const math = @import("std").math;
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
-const pinball = @import("pinball");
-const Wall = pinball.Wall;
+const Wall = @import("Wall.zig");
 
 pub const Side = enum(c_int) {
     left = 0,

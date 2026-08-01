@@ -1,19 +1,19 @@
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
-const Ball = @import("Ball.zig");
 const pinball = @import("pinball");
 const Wall = pinball.Wall;
-const Flipper = @import("Flipper.zig");
+const Flipper = pinball.Flipper;
+const Ball = pinball.Ball;
 
 pub fn resolveWallCollisions(ball: *Ball, walls: []const Wall) void {
     for (walls) |wall| {
         if (wall.checkCollisionCircle(ball.position, ball.radius)) {
-            resolveWallCollision(ball, wall);
+            resolveWallCollision(ball, &wall);
         }
     }
 }
 
-fn resolveWallCollision(ball: *Ball, wall: Wall) void {
+fn resolveWallCollision(ball: *Ball, wall: *const Wall) void {
     reduceDepth(ball, wall);
     const collision_normal = wall.collisionNormal(ball.position);
     const velocity_n = collision_normal.scale(ball.velocity.dotProduct(collision_normal));
@@ -22,7 +22,7 @@ fn resolveWallCollision(ball: *Ball, wall: Wall) void {
     ball.velocity = velocity_t.add(reduced_velocity_n.negate()).add(wall.linearVelocity(ball.position));
 }
 
-fn reduceDepth(ball: *Ball, wall: Wall) void {
+fn reduceDepth(ball: *Ball, wall: *const Wall) void {
     const distance = wall.distance(ball.position);
     if (distance < ball.radius) {
         const depth = ball.radius - distance;
