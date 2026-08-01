@@ -74,14 +74,7 @@ fn gameOver(self: *Game) !void {
         rl.beginDrawing();
         defer rl.endDrawing();
         rl.clearBackground(.black);
-
-        const window_width: f32 = @floatFromInt(self.context.window_width);
-        const window_height: f32 = @floatFromInt(self.context.window_height);
-        const center_x = window_width / 2;
-        const center_y = window_height / 2;
-
-        try gui.drawText("Game Over", center_x, center_y - 30);
-        if (gui.button("Try again!", center_x, center_y + 30)) break;
+        if (try gui.drawGameOver(self.context)) break;
     }
 }
 
