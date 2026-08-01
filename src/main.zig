@@ -19,5 +19,5 @@ pub fn main() !void {
     };
 
     var game = Game.init(&walls, &flippers);
-    game.start();
+    try game.start();
 }

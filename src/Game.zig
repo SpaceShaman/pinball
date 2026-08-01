@@ -5,7 +5,10 @@ const Flipper = @import("Flipper.zig");
 const drawHud = @import("hud.zig").drawHud;
 const resolveWallCollisions = @import("collisions.zig").resolveWallCollisions;
 const rl = @import("raylib");
+const Vector2 = rl.Vector2;
 const rg = @import("raygui");
+const gui = @import("gui.zig");
+const std = @import("std");
 
 const Game = @This();
 
@@ -16,21 +19,35 @@ flippers: []Flipper,
 
 pub fn init(walls: []const Wall, flippers: []Flipper) Game {
     return Game{
-        .context = GameContext{ .lives = 1 },
+        .context = GameContext{},
         .ball = Ball.init(100, 50),
         .walls = walls,
         .flippers = flippers,
     };
 }
 
-pub fn start(self: *Game) void {
+pub fn start(self: *Game) !void {
     rl.initWindow(self.context.window_width, self.context.window_height, "Flipper");
     defer rl.closeWindow();
 
     rl.setWindowMonitor(2);
 
-    self.gameLoop();
-    self.gameOver();
+    rg.setStyle(
+        .default,
+        .text_size,
+        24,
+    );
+    rg.setStyle(
+        .default,
+        .text_alignment_vertical,
+        @intFromEnum(rg.TextAlignmentVertical.middle),
+    );
+
+    while (!rl.windowShouldClose()) {
+        self.context.lives = 3;
+        try self.gameOver();
+        self.gameLoop();
+    }
 }
 
 fn gameLoop(self: *Game) void {
@@ -52,7 +69,7 @@ fn gameLoop(self: *Game) void {
     }
 }
 
-fn gameOver(self: *Game) void {
+fn gameOver(self: *Game) !void {
     while (!rl.windowShouldClose()) {
         rl.beginDrawing();
         defer rl.endDrawing();
@@ -60,16 +77,11 @@ fn gameOver(self: *Game) void {
 
         const window_width: f32 = @floatFromInt(self.context.window_width);
         const window_height: f32 = @floatFromInt(self.context.window_height);
-        const box_width: f32 = 400.0;
-        const box_height: f32 = 100.0;
-        const x = (window_width - box_width) / 2;
-        const y = (window_height - box_height) / 2;
-        _ = rg.messageBox(
-            .{ .height = box_height, .width = box_width, .x = x, .y = y },
-            "Game Over",
-            "Try again!",
-            "Start",
-        );
+        const center_x = window_width / 2;
+        const center_y = window_height / 2;
+
+        try gui.drawText("Game Over", center_x, center_y - 30);
+        if (gui.button("Try again!", center_x, center_y + 30)) break;
     }
 }
 
