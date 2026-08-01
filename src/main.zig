@@ -47,8 +47,10 @@ pub fn main() !void {
 }
 
 fn onKeyPress(flippers: []Flipper) void {
+    const key = rl.getKeyPressed();
+    if (key == rl.KeyboardKey.null) return;
     for (flippers) |*flipper| {
-        flipper.onKeyPress();
+        flipper.onKeyPress(key);
     }
 }
 

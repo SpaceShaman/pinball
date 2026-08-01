@@ -52,15 +52,15 @@ pub fn draw(self: *const Flipper) void {
     }
 }
 
-pub fn onKeyPress(self: *Flipper) void {
-    var key = rl.KeyboardKey.right;
+pub fn onKeyPress(self: *Flipper, key: rl.KeyboardKey) void {
+    var key_to_press = rl.KeyboardKey.right;
     var vel: f32 = 10;
     if (self.side == Side.left) {
-        key = rl.KeyboardKey.left;
+        key_to_press = rl.KeyboardKey.left;
         vel = -10;
     }
 
-    if (rl.isKeyPressed(key)) {
+    if (key == key_to_press) {
         self.velocity = vel;
     }
 }
