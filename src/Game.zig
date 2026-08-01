@@ -1,3 +1,4 @@
+const GameContext = @import("GameContext.zig");
 const Ball = @import("Ball.zig");
 const Wall = @import("Wall.zig");
 const Flipper = @import("Flipper.zig");
@@ -7,23 +8,22 @@ const rl = @import("raylib");
 
 const Game = @This();
 
-ball: *Ball,
+context: GameContext,
+ball: Ball,
 walls: []const Wall,
 flippers: []Flipper,
-lives: u4 = 3,
-window_width: i32 = 720,
-window_height: i32 = 1280,
 
-pub fn init(ball: *Ball, walls: []const Wall, flippers: []Flipper) Game {
+pub fn init(walls: []const Wall, flippers: []Flipper) Game {
     return Game{
-        .ball = ball,
+        .context = GameContext{},
+        .ball = Ball.init(100, 50),
         .walls = walls,
         .flippers = flippers,
     };
 }
 
 pub fn start(self: *Game) void {
-    rl.initWindow(self.window_width, self.window_height, "Flipper");
+    rl.initWindow(self.context.window_width, self.context.window_height, "Flipper");
     defer rl.closeWindow();
 
     rl.setWindowMonitor(2);
@@ -53,11 +53,11 @@ fn onKeyPress(self: *Game) void {
 }
 
 fn update(self: *Game, dt: f32) void {
-    self.ball.update(dt);
-    resolveWallCollisions(self.ball, self.walls);
+    self.ball.update(dt, &self.context);
+    resolveWallCollisions(&self.ball, self.walls);
     for (self.flippers) |*flipper| {
         flipper.update(dt);
-        resolveWallCollisions(self.ball, &flipper.walls);
+        resolveWallCollisions(&self.ball, &flipper.walls);
     }
 }
 
@@ -69,5 +69,5 @@ fn draw(self: *Game) void {
     self.ball.draw();
     for (self.walls) |*wall| wall.draw();
     for (self.flippers) |*flipper| flipper.draw();
-    drawHud(self.window_width, self.lives);
+    drawHud(self.context);
 }

@@ -1,6 +1,4 @@
 const Wall = @import("Wall.zig");
-const std = @import("std");
-const print = std.debug.print;
 const math = @import("std").math;
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
