@@ -1,9 +1,8 @@
+const Ball = @import("Ball.zig");
+const Wall = @import("Wall.zig");
+const Flipper = @import("Flipper.zig");
 const rl = @import("raylib");
 const Vector2 = rl.Vector2;
-const pinball = @import("pinball");
-const Wall = pinball.Wall;
-const Flipper = pinball.Flipper;
-const Ball = pinball.Ball;
 
 pub fn resolveWallCollisions(ball: *Ball, walls: []const Wall) void {
     for (walls) |wall| {

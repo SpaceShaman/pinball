@@ -1,14 +1,9 @@
+const Game = @import("Game.zig");
+const Ball = @import("Ball.zig");
+const Wall = @import("Wall.zig");
+const Flipper = @import("Flipper.zig");
 const std = @import("std");
 const rl = @import("raylib");
-const collisions = @import("collisions.zig");
-const pinball = @import("pinball");
-const Wall = pinball.Wall;
-const Flipper = pinball.Flipper;
-const Ball = pinball.Ball;
-
-const window_width = 720;
-const window_height = 1280;
-const physics_dt: f32 = 1.0 / 120.0;
 
 pub fn main() !void {
     const walls = [_]Wall{
@@ -26,49 +21,6 @@ pub fn main() !void {
         Flipper.init(720 - 230, 1230, Flipper.Side.right),
     };
 
-    rl.initWindow(window_width, window_height, "Flipper");
-    defer rl.closeWindow();
-
-    rl.setWindowMonitor(2);
-
-    var accumulator: f32 = 0.0;
-
-    while (!rl.windowShouldClose()) {
-        onKeyPress(&flippers);
-        const frame_dt = @min(rl.getFrameTime(), 0.1);
-        accumulator += frame_dt;
-
-        draw(&ball, &walls, &flippers);
-        while (accumulator >= physics_dt) {
-            update(&ball, &walls, &flippers, physics_dt);
-            accumulator -= physics_dt;
-        }
-    }
-}
-
-fn onKeyPress(flippers: []Flipper) void {
-    const key = rl.getKeyPressed();
-    if (key == rl.KeyboardKey.null) return;
-    for (flippers) |*flipper| {
-        flipper.onKeyPress(key);
-    }
-}
-
-fn update(ball: *Ball, walls: []const Wall, flippers: []Flipper, dt: f32) void {
-    ball.update(dt);
-    collisions.resolveWallCollisions(ball, walls);
-    for (flippers) |*flipper| {
-        flipper.update(dt);
-        collisions.resolveWallCollisions(ball, &flipper.walls);
-    }
-}
-
-fn draw(ball: *Ball, walls: []const Wall, flippers: []const Flipper) void {
-    rl.beginDrawing();
-    defer rl.endDrawing();
-    rl.clearBackground(.black);
-
-    ball.draw();
-    for (walls) |*wall| wall.draw();
-    for (flippers) |*flipper| flipper.draw();
+    var game = Game.init(&ball, &walls, &flippers);
+    game.start();
 }
