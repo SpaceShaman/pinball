@@ -74,7 +74,7 @@ fn gameOver(self: *Game) !void {
         rl.beginDrawing();
         defer rl.endDrawing();
         rl.clearBackground(.black);
-        if (try gui.drawGameOver(self.context)) break;
+        if (try gui.drawGameOver(self.context.getWindowCenter())) break;
     }
 }
 

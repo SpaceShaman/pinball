@@ -1,15 +1,11 @@
 const GameContext = @import("GameContext.zig");
 const rl = @import("raylib");
+const Vector2 = rl.Vector2;
 const rg = @import("raygui");
 
-pub fn drawGameOver(context: GameContext) !bool {
-    const window_width: f32 = @floatFromInt(context.window_width);
-    const window_height: f32 = @floatFromInt(context.window_height);
-    const center_x = window_width / 2;
-    const center_y = window_height / 2;
-
-    try drawText("Game Over", center_x, center_y - 30);
-    return button("Try again!", center_x, center_y + 30);
+pub fn drawGameOver(center: Vector2) !bool {
+    try drawText("Game Over", center.x, center.y - 30);
+    return button("Try again!", center.x, center.y + 30);
 }
 
 pub fn drawText(text: [:0]const u8, x: f32, y: f32) !void {
