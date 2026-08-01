@@ -5,6 +5,7 @@ const Flipper = @import("Flipper.zig");
 const drawHud = @import("hud.zig").drawHud;
 const resolveWallCollisions = @import("collisions.zig").resolveWallCollisions;
 const rl = @import("raylib");
+const rg = @import("raygui");
 
 const Game = @This();
 
@@ -15,7 +16,7 @@ flippers: []Flipper,
 
 pub fn init(walls: []const Wall, flippers: []Flipper) Game {
     return Game{
-        .context = GameContext{},
+        .context = GameContext{ .lives = 1 },
         .ball = Ball.init(100, 50),
         .walls = walls,
         .flippers = flippers,
@@ -28,6 +29,11 @@ pub fn start(self: *Game) void {
 
     rl.setWindowMonitor(2);
 
+    self.gameLoop();
+    self.gameOver();
+}
+
+fn gameLoop(self: *Game) void {
     const physics_dt: f32 = 1.0 / 120.0;
     var accumulator: f32 = 0.0;
 
@@ -43,6 +49,27 @@ pub fn start(self: *Game) void {
         self.draw();
 
         if (self.context.lives == 0) break;
+    }
+}
+
+fn gameOver(self: *Game) void {
+    while (!rl.windowShouldClose()) {
+        rl.beginDrawing();
+        defer rl.endDrawing();
+        rl.clearBackground(.black);
+
+        const window_width: f32 = @floatFromInt(self.context.window_width);
+        const window_height: f32 = @floatFromInt(self.context.window_height);
+        const box_width: f32 = 400.0;
+        const box_height: f32 = 100.0;
+        const x = (window_width - box_width) / 2;
+        const y = (window_height - box_height) / 2;
+        _ = rg.messageBox(
+            .{ .height = box_height, .width = box_width, .x = x, .y = y },
+            "Game Over",
+            "Try again!",
+            "Start",
+        );
     }
 }
 
