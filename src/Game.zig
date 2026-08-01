@@ -45,8 +45,8 @@ pub fn start(self: *Game) !void {
 
     while (!rl.windowShouldClose()) {
         self.context.lives = 3;
-        try self.gameOver();
         self.gameLoop();
+        try self.gameOver();
     }
 }
 
