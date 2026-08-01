@@ -13,12 +13,14 @@ pub fn drawText(text: [:0]const u8, x: f32, y: f32) !void {
     const font_size = 30.0;
     const spacing = 1.0;
     const text_size = rl.measureTextEx(font, text, font_size, spacing);
-    const position = rl.Vector2.init(x - text_size.x / 2, y - font_size / 2);
 
     rl.drawTextEx(
         font,
         text,
-        position,
+        Vector2.init(
+            x - text_size.x / 2,
+            y - font_size / 2,
+        ),
         font_size,
         spacing,
         .white,
